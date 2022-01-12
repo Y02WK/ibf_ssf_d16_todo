@@ -13,11 +13,11 @@
     <title>My Todo</title>
   </head>
   <body>
-    <div>
+    <div class="text-center">
       <h1>My Todo</h1>
-      <form method="post" action="/">
+      <form method="post" action="/task">
         <label for="addTask">Task</label>
-        <input type="text" id="addTask" placeholder="Add Task" required />
+        <input type="text" name="taskName" placeholder="Add Task" required />
         <button class="btn btn-primary" type="submit" value="submit">
           Add
         </button>
