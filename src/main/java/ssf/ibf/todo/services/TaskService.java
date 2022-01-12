@@ -18,7 +18,7 @@ public class TaskService {
     private TaskRepository taskRepository;
 
     public void saveTasks(String key, List<String> tasks) {
-        String listAsString = String.join(Constants.DELIMITER, tasks);
+        String listAsString = String.join(Constants.JOIN_DELIMITER, tasks);
         taskRepository.save(key, listAsString);
     }
 
@@ -27,12 +27,13 @@ public class TaskService {
         return opt.isPresent();
     }
 
-    public List<String> get(String key) {
+    public Optional<List<String>> get(String key) {
         Optional<String> opt = taskRepository.get(key);
         if (opt.isPresent()) {
-            return new ArrayList<String>(Arrays.asList(opt.get().split(Constants.DELIMITER)));
+            return Optional
+                    .ofNullable(new ArrayList<String>(Arrays.asList(opt.get().split(Constants.SPLIT_DELIMITER))));
         } else {
-            return null;
+            return Optional.empty();
         }
     }
 }

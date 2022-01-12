@@ -26,30 +26,38 @@ public class TaskController {
     @PostMapping
     public String addTask(@RequestBody MultiValueMap<String, String> form, Model model) {
         List<String> taskList = form.get("taskName");
+        String username = form.getFirst("username");
 
+        logger.info(username);
         logger.info(taskList.toString());
         logger.info(form.toString());
 
+        model.addAttribute("username", username);
         model.addAttribute("taskList", taskList);
-        return "index";
+        return "tasklist";
     }
 
     @PostMapping("/save")
     public String saveTasks(@RequestBody MultiValueMap<String, String> form, Model model) {
         ArrayList<String> taskList = new ArrayList<>(form.get("taskName"));
-
+        String username = form.getFirst("username");
         do {
             taskList.remove("");
         } while (taskList.remove(""));
 
+        logger.info(username);
         logger.info(taskList.toString());
         logger.info(Integer.toString(taskList.size()));
 
         if (taskList.size() > 0) {
             model.addAttribute("flash", "Tasks saved successfully.");
+            model.addAttribute("username", username);
+            model.addAttribute("taskList", taskList);
+            taskService.saveTasks(username, taskList);
         } else {
             model.addAttribute("flash", "Error. No tasks to save!");
+            model.addAttribute("username", username);
         }
-        return "index";
+        return "tasklist";
     }
 }
