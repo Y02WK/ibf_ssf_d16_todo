@@ -28,6 +28,7 @@ public class TaskController {
         List<String> taskList = form.get("taskName");
         String username = form.getFirst("username");
 
+        // logging
         logger.info(username);
         logger.info(taskList.toString());
         logger.info(form.toString());
@@ -41,20 +42,25 @@ public class TaskController {
     public String saveTasks(@RequestBody MultiValueMap<String, String> form, Model model) {
         ArrayList<String> taskList = new ArrayList<>(form.get("taskName"));
         String username = form.getFirst("username");
+
+        // removes empty string from taskList added during save
         do {
             taskList.remove("");
         } while (taskList.remove(""));
 
+        // logging
         logger.info(username);
         logger.info(taskList.toString());
         logger.info(Integer.toString(taskList.size()));
 
+        // saves if there are tasks and show success message
         if (taskList.size() > 0) {
             model.addAttribute("flash", "Tasks saved successfully.");
             model.addAttribute("username", username);
             model.addAttribute("taskList", taskList);
             taskService.saveTasks(username, taskList);
         } else {
+            // if no tasks to save, show error message
             model.addAttribute("flash", "Error. No tasks to save!");
             model.addAttribute("username", username);
         }

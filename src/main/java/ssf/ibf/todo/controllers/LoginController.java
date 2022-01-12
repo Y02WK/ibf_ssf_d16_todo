@@ -24,13 +24,13 @@ public class LoginController {
     public String loginUser(@RequestBody MultiValueMap<String, String> form, Model model) {
         List<String> taskList = new ArrayList<>();
         String username = form.getFirst("userName").toUpperCase();
-        // check if list exists
+
+        // gets existing taskList from Redis if username is found in database
         if (taskService.hasKey(username)) {
             taskList = taskService.get(username).get();
-        }
-        if (taskList.size() > 0) {
             model.addAttribute("taskList", taskList);
         }
+
         model.addAttribute("username", username);
         return "tasklist";
     }
