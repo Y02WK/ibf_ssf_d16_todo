@@ -11,8 +11,9 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
+import ssf.ibf.todo.constants.Constants;
 
 @Configuration
 public class RedisConfig {
@@ -40,13 +41,12 @@ public class RedisConfig {
     @Value("${spring.redis.jedis.pool.min-idle}")
     private Integer jedisPoolMinIdle;
 
-    @Bean
-    public RedisTemplate<String, Object> createRedisTemplate() {
+    @Bean(Constants.REDIS_TEMPLATE)
+    public RedisTemplate<String, String> createRedisTemplate() {
         // configuring the database
         final RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration();
         redisConfig.setHostName(redisHost);
         redisConfig.setPort(redisPort.get());
-        logger.info(redisPassword);
         if (redisPassword != null) {
             redisConfig.setPassword(redisPassword);
         }
@@ -63,10 +63,10 @@ public class RedisConfig {
         final JedisConnectionFactory jedisFac = new JedisConnectionFactory(redisConfig, jedisClient);
         jedisFac.afterPropertiesSet();
 
-        final RedisTemplate<String, Object> template = new RedisTemplate<>();
+        final RedisTemplate<String, String> template = new RedisTemplate<>();
         template.setConnectionFactory(jedisFac);
         template.setKeySerializer(new StringRedisSerializer()); // keys in utf-8
-        template.setValueSerializer(new JdkSerializationRedisSerializer(getClass().getClassLoader()));
+        template.setValueSerializer(new StringRedisSerializer());
         return template;
     }
 }
