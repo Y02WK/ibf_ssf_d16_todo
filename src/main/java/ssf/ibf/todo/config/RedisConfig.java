@@ -46,6 +46,7 @@ public class RedisConfig {
         final RedisStandaloneConfiguration redisConfig = new RedisStandaloneConfiguration();
         redisConfig.setHostName(redisHost);
         redisConfig.setPort(redisPort.get());
+        logger.info(redisPassword);
         if (redisPassword != null) {
             redisConfig.setPassword(redisPassword);
         }
